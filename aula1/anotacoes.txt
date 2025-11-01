@@ -1,0 +1,19 @@
+var → escopo global ou de função, não respeita bloco (if, for, etc.).
+
+let → escopo de bloco, ou seja, só existe dentro do { }.
+
+const → escopo de bloco também, mas não pode ser reatribuído.
+
+
+const nunca permite a retibuição da var
+Se for tipo primitivo (número, string, boolean), não tem como mudar o valor mesmo.
+Se for objeto/array/função, você não pode trocar a referência (reatribuir), mas pode alterar o conteúdo interno.
+ex.
+const arr = [1, 2, 3]
+arr.push(4)  // ✅ pode alterar o conteúdo
+arr = [5, 6]  // ❌ erro → não pode reatribuir
+
+
+
+console.log(a+b) → só mostra o valor no console.
+return a+b → devolve o valor para ser usado em outro lugar do código.

@@ -1,0 +1,48 @@
+let x = 5
+let y = x   // y recebe uma cópia de x
+x = 10
+
+console.log(y) // 5
+
+Em tipos primitivos (number, string, boolean, null, undefined, symbol, bigint), o JavaScript sempre cria uma cópia do valor.
+Por isso, y não muda quando x muda → ele recebeu uma cópia de 5.
+----------------
+Para atualizar, seria preciso retornar o novo valor e reatribuir à variável original
+Isso acontece porque primitivos (números, strings, boolean) são passados por valor → ou seja, uma cópia.
+----------------
+Exemplo:
+
+function somaUm(num) {
+    num = num + 1
+    return num
+}
+
+let x = 5
+x = somaUm(x) // aqui eu reatribuo o valor retornado
+console.log(x) // 6
+----------------
+
+Se eu não reatribuir, o valor não é guardado em lugar nenhum:
+
+let x = 5
+somaUm(x) // calcula, mas não salva
+console.log(x) // continua 5
+----------------
+
+Ou seja: return sozinho não muda nada.
+Você precisa capturar esse retorno e guardar na variável original (ou em outra).
+
+----------------------------------------------------------------------------------------
+
+
+num++ → pós-incremento (incrementa depois de usar o valor)
+++num → pré-incremento (incrementa antes de usar o valor)
+num += 1 → incremento explícito
+
+Primitivos → passam por valor (cópia).
+
+Objetos/arrays → passam por referência (ponteiro para o mesmo lugar na memória).
+
+for...of percorre os valores do array.
+for...in percorre os índices (no caso de arrays) ou propriedades (no caso de objetos).
+
