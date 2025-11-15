@@ -19,16 +19,21 @@ function determinar_banco(num_agencia){
 
 class bancoCentral{
     movimentacoesGrandes = []
+
     movimentacoesAltas(pessoa, valor, tipo){
         if (valor > 1000){
             this.movimentacoesGrandes.push({pessoa: pessoa.nome, valor: valor, tipo: tipo})
             console.log("Uma movimentação de alto valor foi realizada.")
         }
     }
+    mostrarMovimentacoesGrandes(){
+        for (let mg of this.movimentacoesGrandes){
+            console.log(`${mg.pessoa} realizou um ${mg.tipo} de R$ ${mg.valor}`)
+        }
+    }
 }
 class banco{
     movimentacoes = []
-    agencias = []
     registroMovimentacao(pessoa, valor, tipo){
             this.movimentacoes.push(
                 {
@@ -44,10 +49,10 @@ class banco{
     }
 }
 
-class agencia extends banco{
-    clientes = []
+// class agencia extends banco{
+//     clientes = []
 
-}
+// }
 
 class pessoa {
     nome
@@ -121,32 +126,34 @@ class pessoa {
         if (this.#saldo >= valor){
             this.sacar(banco, bancoCentral, valor)
             destinatario.depositar(banco, bancoCentral, valor)
-            console.log(`Uma transferência foi realizada de R$ ${valor} foi realizada de ${this.nome} (${this.banco}) para ${destinatario} (${destinatario.banco})`)
+            console.log(`Uma transferência de R$ ${valor} foi realizada de ${this.nome} (${this.banco}) para ${destinatario.nome} (${destinatario.banco})`)
         }else{
             console.log(`${this.nome} não tem saldo suficiente para realizar esta operação.`)
         }
     }
 }
 let bc = new bancoCentral()
+let bancoGenerico = new banco()
 let maria = new pessoa("Maria", "062.459.651-60", 50, "004-4");
 let matheus = new pessoa("Matheus", "062.876.540-67", 10, "001-1");
 let joao = new pessoa("João", "123.456.789-00", 1000, "002-2");
 
 console.log("\n--- Transações ---");
 
-matheus.depositar(bc, 30);
-matheus.depositar(bc, 30000); 
-matheus.depositar(bc, 50);
-matheus.sacar(bc, 10);
+matheus.depositar(bancoGenerico, bc, 30);
+matheus.depositar(bancoGenerico, bc, 30000); 
+matheus.depositar(bancoGenerico, bc, 50);
+matheus.sacar(bancoGenerico, bc, 10);
 
-joao.transferir(maria, bc, 827);
+
+joao.transferir(maria, bancoGenerico, bc, 827);
 
 console.log("\n--- Extratos ---");
 matheus.mostrarExtrato();
 maria.mostrarExtrato();
 joao.mostrarExtrato();
 
-console.log("\n--- Movimentações de Alto Valor (Banco Central) ---");
-console.log(bc.movimentacoesGrandes);
+console.log("\n--- Movimentações de Alto Valor (Banco Central) ---")
+bc.mostrarMovimentacoesGrandes()
 
 
