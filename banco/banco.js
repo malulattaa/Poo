@@ -93,7 +93,7 @@ class pessoa {
             
             
         }
-        banco.registroMovimentacao(this, valor, "Depósito") // aqui ainda dá erro
+        banco.registroMovimentacao(this, valor, "Depósito") 
         bancoCentral.movimentacoesAltas(this, valor, "Depósito")
     }
 
