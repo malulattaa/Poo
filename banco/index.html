@@ -7,15 +7,57 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="imagem">
-        <img src="logo.png" alt="logo" id="logo">
+    <div class="cabecalho">
+        <img id="logo" src="logo.png" alt="Logo do JS Bank">
+        <h1>JS BANK</h1>
+        <p class="slogan">DINHEIRO RÁPIDO, SEM ENROLAÇÃO</p>
     </div>
-    <div class="acoes">
-        <div id="depositar">DEPOSITAR</div>
-        <div id="sacar">SACAR</div>
-        <div id="transferir">TRANSFERIR</div>
-        <div id="extrato">EXTRATO</div>
+    <div>
+        <div class="acoes">
+            <div id="depositar" class="acao-btn">DEPOSITAR</div>
+            <div id="sacar" class="acao-btn">SACAR</div>
+            <div id="transferir"  class="acao-btn">TRANSFERIR</div>
+            <div id="extrato" class="acao-btn">EXTRATO</div>
+        </div>
     </div>
+    <div id="janelaDeposito">
+        <h2>Depósito</h2>
+        <input type="text" placeholder="Nome do Cliente" id="depositoNome">
+        <input type="number" placeholder="Valor do depósito" id="depositoValor">
+        <div class="janelaBotoes">
+            <button onclick="eventoDepositar()">Confirmar</button>
+            <button onclick="fechar('janelaDeposito')">Fechar</button>
+        </div>
+    </div>
+    <div id="janelaSaque">
+        <h2>Saque</h2>
+        <input type="text" placeholder="Nome do Cliente" id="saqueNome">
+        <input type="number" placeholder="Valor do saque" id="saqueValor">
+        <div class="janelaBotoes">
+            <button onclick="eventoSacar()">Confirmar</button>
+            <button onclick="fechar('janelaSaque')">Fechar</button>
+        </div>
+    </div>
+    <div id="janelaTransferencia">
+        <h2>Transferência</h2>
+        <input type="text" placeholder="Remetente (?)" id="remetente">
+        <input type="text" placeholder="Destinatário (?)" id="destinatario">
+        <input type="number" placeholder="Valor da transferência" id="transfValor">
+        <div class="janelaBotoes">
+            <button onclick="eventoTransferencia()">Confirmar</button>
+            <button onclick="fechar('janelaTransferencia')">Fechar</button>
+        </div>
+    </div>
+    <div id="janelaExtrato">
+        <h2>Extrato</h2>
+        <input type="text" placeholder="Nome do Cliente" id="extratoNome">
+        <div class="janelaBotoes">
+            <button onclick="eventoMostrarExtrato()">Confirmar</button>
+            <button onclick="fechar('janelaExtrato')">Fechar</button>
+        </div>
+        <ul id="extratoArea"></ul>
+    </div>
+    
 
     <script src="funcionalidades.js"></script>
 </body>
