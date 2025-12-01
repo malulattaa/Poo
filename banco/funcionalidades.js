@@ -4,29 +4,42 @@
 //clientes que fazem operações -> saque, transferencia entre clientes (pix) e deposito
 // exibir o extrato por cliente
 
-const agencia_banco = {
-    '001-1' : 'Banco do Brasil',
-    '002-2' : 'Caixa Economica',
-    '003-3' : 'Bradesco',
-    '004-4' : 'Inter',
-    '005-5' : 'Nubank',
+// const agencia_banco = {
+//     '001-1' : 'Banco do Brasil',
+//     '002-2' : 'Caixa Economica',
+//     '003-3' : 'Bradesco',
+//     '004-4' : 'Inter',
+//     '005-5' : 'Nubank',
 
-}
+// }
+const agencia_banco = new Map ([
+    ['001-1', 'Banco do Brasil'],
+    ['002-2', 'Caixa Econômico'],
+    ['003-3', 'Bradesco'],
+    ['004-4', 'Inter'], 
+    ['005-5', 'Nubank']
+])
+// trabalhar com map
+
 
 function determinar_banco(num_agencia){
-    return agencia_banco[num_agencia] || 'Banco não cadastrado.'
+    return agencia_banco.get(num_agencia) || 'Banco não cadastrado.'
 }
 
 class bancoCentral{
     movimentacoesGrandes = []
 
-    movimentacoesAltas(pessoa, valor, tipo){
-        if (valor > 1000){
-            this.movimentacoesGrandes.push({pessoa: pessoa.nome, valor: valor, tipo: tipo})
-            console.log("Uma movimentação de alto valor foi realizada.")
-        }
+
+    notificar(pessoa, valor, tipo){
+        this.movimentacoesGrandes.push({
+            pessoa: pessoa,
+            valor: valor,
+            tipo: tipo,
+        })
+        console.log(`Banco Cnetral: operação de alto valor realizada.`)
     }
     mostrarMovimentacoesGrandes(){
+        console.log("----- Movimentações de alto valor -----")
         for (let mg of this.movimentacoesGrandes){
             console.log(`${mg.pessoa} realizou um ${mg.tipo} de R$ ${mg.valor}`)
         }
@@ -34,126 +47,145 @@ class bancoCentral{
 }
 class banco{
     movimentacoes = []
-    registroMovimentacao(pessoa, valor, tipo){
+    registroMovimentacao(conta, valor, tipo, bancoCentral){
             this.movimentacoes.push(
                 {
-                    pessoa: pessoa.nome, 
-                    banco: pessoa.banco, 
-                    agencia: pessoa.agencia, 
+                    pessoa: conta.pessoa.nome, 
+                    banco: conta.banco, 
+                    agencia: conta.agencia, 
                     valor: valor, 
                     tipo: tipo
 
                 }
             )
             console.log("Movimentação registrada")
+
+            if(valor>1000){
+                bancoCentral.notificar(conta.pessoa.nome, valor, tipo)
+            }
     }
 }
+// por um if -> se for alta notifica o banco central
 
 // class agencia extends banco{
-//     clientes = []
+    //     clientes = []
+    
+    // }
+// let dep = document.getElementById('depositar').addEventListener('click', depositar)
 
-// }
+
 
 class pessoa {
     nome
     cpf
-    #saldo
-    agencia
-    banco
+
+    constructor(nome, cpf){
+        this.nome = nome
+        this.cpf = cpf
+    }
+}
+
+class Conta{
+    #saldo;
     extrato = [];
 
-    constructor(nome, cpf, saldo, agencia) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.#saldo = saldo;
+    constructor(pessoa, agencia, saldoInicial = 0) {
+        this.pessoa = pessoa;
         this.agencia = agencia;
-        this.banco = determinar_banco(agencia)
+        this.banco = determinar_banco(agencia);
+        this.#saldo = saldoInicial;
 
-        if (this.banco == 'Banco não cadastrado.'){
-            console.log(`A agência ${this.agencia} de ${this.nome} não está vinculada a nenhum banco`)
-        }else{
-            console.log(`${this.nome} está associado a agência: ${this.agencia} do banco ${this.banco}`)
+        if (this.banco === 'Banco não cadastrado.') {
+            console.log(`A agência ${this.agencia} de ${this.pessoa.nome} não está vinculada a nenhum banco`);
+        } else {
+            console.log(`${this.pessoa.nome} está associado à agência: ${this.agencia} do banco ${this.banco}`);
         }
     }
 
-    get getSaldo() {
+    get saldo() {
         return this.#saldo;
     }
-    depositar(banco, bancoCentral, valor){
-        if (valor<= 0){
-            console.log("Valor indisponível para depósito.")
-        }else{
-            this.#saldo += valor
-            this.extrato.push({
-                tipo: "Depósito",
-                valor: valor,
-                saldoAtual: this.#saldo,
-                banco: this.banco,
-            });
-            
-            
+
+    depositar(valor, banco, bancoCentral) {
+        if (valor <= 0) {
+            console.log("Valor inválido para depósito.");
+            return;
         }
-        banco.registroMovimentacao(this, valor, "Depósito") 
-        bancoCentral.movimentacoesAltas(this, valor, "Depósito")
+
+        this.#saldo += valor;
+
+        this.extrato.push({
+            tipo: "Depósito",
+            valor: valor,
+            saldoAtual: this.#saldo
+        });
+
+        banco.registroMovimentacao(this, valor, "Depósito", bancoCentral);
     }
 
-        
-    sacar(banco, bancoCentral, valor){
-        if (this.#saldo >= valor){
-            this.#saldo -= valor
-            this.extrato.push({
-                tipo: "Saque",
-                valor: valor,
-                saldoAtual: this.#saldo,
-                banco: this.banco
-            });
+    sacar(valor, banco, bancoCentral) {
+        if (valor > this.#saldo) {
+            console.log(`${this.pessoa.nome} não tem saldo suficiente.`);
+            return;
         }
-        else{
-            console.log(`${this.nome} não tem saldo suficiente para realizar saque.`)
-        }
-        banco.registroMovimentacao(this, valor, "Saque")
-        bancoCentral.movimentacoesAltas(this, valor, "Saque")
-        
-    }
-    mostrarExtrato(){
-        console.log(`---------Extrato de ${this.nome}---------`)
-        for(let movimentacao of this.extrato){
-            console.log(`${movimentacao.tipo} R$: ${movimentacao.valor} | Saldo atual: R$ ${movimentacao.saldoAtual}`)
 
-        }
+        this.#saldo -= valor;
+
+        this.extrato.push({
+            tipo: "Saque",
+            valor: valor,
+            saldoAtual: this.#saldo
+        });
+
+        banco.registroMovimentacao(this, valor, "Saque", bancoCentral);
     }
-    transferir(destinatario, banco, bancoCentral, valor){
-        if (this.#saldo >= valor){
-            this.sacar(banco, bancoCentral, valor)
-            destinatario.depositar(banco, bancoCentral, valor)
-            console.log(`Uma transferência de R$ ${valor} foi realizada de ${this.nome} (${this.banco}) para ${destinatario.nome} (${destinatario.banco})`)
-        }else{
-            console.log(`${this.nome} não tem saldo suficiente para realizar esta operação.`)
+
+    transferir(destinatario, valor, banco, bancoCentral) {
+        if (valor > this.#saldo) {
+            console.log("Saldo insuficiente para transferência.");
+            return;
+        }
+
+        this.sacar(valor, banco, bancoCentral);
+        destinatario.depositar(valor, banco, bancoCentral);
+
+        console.log(
+            `Transferência de R$ ${valor} realizada de ${this.pessoa.nome} para ${destinatario.pessoa.nome}`
+        );
+    }
+
+    mostrarExtrato() {
+        console.log(`--------- Extrato de ${this.pessoa.nome} ---------`);
+        for (let mov of this.extrato) {
+            console.log(`${mov.tipo}: R$ ${mov.valor} | Saldo após: R$ ${mov.saldoAtual}`);
         }
     }
 }
-let bc = new bancoCentral()
-let bancoGenerico = new banco()
-let maria = new pessoa("Maria", "062.459.651-60", 50, "004-4");
-let matheus = new pessoa("Matheus", "062.876.540-67", 10, "001-1");
-let joao = new pessoa("João", "123.456.789-00", 1000, "002-2");
+
+// TESTES
+
+let bc = new bancoCentral();
+let bancoGenerico = new banco();
+
+let mariaPessoa = new pessoa("Maria", "062.459.651-60");
+let matheusPessoa = new pessoa("Matheus", "062.876.540-67");
+let joaoPessoa = new pessoa("João", "123.456.789-00");
+
+let maria = new Conta(mariaPessoa, "004-4", 50);
+let matheus = new Conta(matheusPessoa, "001-1", 10);
+let joao = new Conta(joaoPessoa, "002-2", 1000);
 
 console.log("\n--- Transações ---");
 
-matheus.depositar(bancoGenerico, bc, 30);
-matheus.depositar(bancoGenerico, bc, 30000); 
-matheus.depositar(bancoGenerico, bc, 50);
-matheus.sacar(bancoGenerico, bc, 10);
+matheus.depositar(30, bancoGenerico, bc);
+matheus.depositar(30000, bancoGenerico, bc);
+matheus.sacar(10, bancoGenerico, bc);
 
-
-joao.transferir(maria, bancoGenerico, bc, 827);
+joao.transferir(maria, 827, bancoGenerico, bc);
 
 console.log("\n--- Extratos ---");
 matheus.mostrarExtrato();
 maria.mostrarExtrato();
 joao.mostrarExtrato();
 
-console.log("\n--- Movimentações de Alto Valor (Banco Central) ---")
-bc.mostrarMovimentacoesGrandes()
-
-
+bc.mostrarMovimentacoesGrandes();
