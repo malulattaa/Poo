@@ -5,33 +5,23 @@
 //clientes que fazem operações -> saque, transferencia entre clientes (pix) e deposito
 // exibir o extrato por cliente
 
-// const agencia_banco = {
-//     '001-1' : 'Banco do Brasil',
-//     '002-2' : 'Caixa Economica',
-//     '003-3' : 'Bradesco',
-//     '004-4' : 'Inter',
-//     '005-5' : 'Nubank',
 
-// }
-const agencia_banco = new Map ([
+const agencia_banco = new Map([
     ['001-1', 'Banco do Brasil'],
     ['002-2', 'Caixa Econômico'],
     ['003-3', 'Bradesco'],
-    ['004-4', 'Inter'], 
+    ['004-4', 'Inter'],
     ['005-5', 'Nubank']
 ])
-// trabalhar com map
 
-
-function determinar_banco(num_agencia){
+function determinar_banco(num_agencia) {
     return agencia_banco.get(num_agencia) || 'Banco não cadastrado.'
 }
 
-class bancoCentral{
+class bancoCentral {
     movimentacoesGrandes = []
 
-
-    notificar(pessoa, valor, tipo){
+    notificar(pessoa, valor, tipo) {
         this.movimentacoesGrandes.push({
             pessoa: pessoa,
             valor: valor,
@@ -39,54 +29,44 @@ class bancoCentral{
         })
         console.log(`Banco Cnetral: operação de alto valor realizada.`)
     }
-    mostrarMovimentacoesGrandes(){
+    mostrarMovimentacoesGrandes() {
         console.log("----- Movimentações de alto valor -----")
-        for (let mg of this.movimentacoesGrandes){
+        for (let mg of this.movimentacoesGrandes) {
             console.log(`${mg.pessoa} realizou um ${mg.tipo} de R$ ${mg.valor}`)
         }
     }
 }
-class banco{
+class banco {
     movimentacoes = []
-    registroMovimentacao(conta, valor, tipo, bancoCentral){
-            this.movimentacoes.push(
-                {
-                    pessoa: conta.pessoa.nome, 
-                    banco: conta.banco, 
-                    agencia: conta.agencia, 
-                    valor: valor, 
-                    tipo: tipo
+    registroMovimentacao(conta, valor, tipo, bancoCentral) {
+        this.movimentacoes.push(
+            {
+                pessoa: conta.pessoa.nome,
+                banco: conta.banco,
+                agencia: conta.agencia,
+                valor: valor,
+                tipo: tipo
 
-                }
-            )
-            console.log("Movimentação registrada")
-
-            if(valor>1000){
-                bancoCentral.notificar(conta.pessoa.nome, valor, tipo)
             }
+        )
+        console.log("Movimentação registrada")
+
+        if (valor > 1000) {
+            bancoCentral.notificar(conta.pessoa.nome, valor, tipo)
+        }
     }
 }
-// por um if -> se for alta notifica o banco central
-
-// class agencia extends banco{
-    //     clientes = []
-    
-    // }
-// let dep = document.getElementById('depositar').addEventListener('click', depositar)
-
-
 
 class pessoa {
     nome
     cpf
-
-    constructor(nome, cpf){
+    constructor(nome, cpf) {
         this.nome = nome
         this.cpf = cpf
     }
 }
 
-class Conta{
+class Conta {
     #saldo;
     extrato = [];
 
@@ -112,9 +92,7 @@ class Conta{
             console.log("Valor inválido para depósito.");
             return;
         }
-
         this.#saldo += valor;
-
         this.extrato.push({
             tipo: "Depósito",
             valor: valor,
@@ -123,11 +101,10 @@ class Conta{
 
         banco.registroMovimentacao(this, valor, "Depósito", bancoCentral);
     }
-
     sacar(valor, banco, bancoCentral) {
         if (valor > this.#saldo) {
             console.log(`${this.pessoa.nome} não tem saldo suficiente.`);
-            return;
+            return false;
         }
 
         this.#saldo -= valor;
@@ -144,15 +121,12 @@ class Conta{
     transferir(destinatario, valor, banco, bancoCentral) {
         if (valor > this.#saldo) {
             console.log("Saldo insuficiente para transferência.");
-            return;
-        }
-
+            return false;
+        }else{
         this.sacar(valor, banco, bancoCentral);
         destinatario.depositar(valor, banco, bancoCentral);
-
-        console.log(
-            `Transferência de R$ ${valor} realizada de ${this.pessoa.nome} para ${destinatario.pessoa.nome}`
-        );
+        }
+        
     }
 
     mostrarExtrato() {
@@ -163,7 +137,7 @@ class Conta{
     }
 }
 
-// TESTES
+// base
 
 let bc = new bancoCentral();
 let bancoGenerico = new banco();
@@ -171,22 +145,104 @@ let bancoGenerico = new banco();
 let mariaPessoa = new pessoa("Maria", "062.459.651-60");
 let matheusPessoa = new pessoa("Matheus", "062.876.540-67");
 let joaoPessoa = new pessoa("João", "123.456.789-00");
+let gabrielaPessoa = new pessoa("Gabriela", "144.475.709-00");
 
 let maria = new Conta(mariaPessoa, "004-4", 50);
 let matheus = new Conta(matheusPessoa, "001-1", 10);
 let joao = new Conta(joaoPessoa, "002-2", 1000);
+let gabriela = new Conta(gabrielaPessoa, "003-3", 0);
 
-console.log("\n--- Transações ---");
+let clientes = {
+    "Maria": maria,
+    "Matheus": matheus,
+    "João": joao,
+    "Gabriela": gabriela
+};
+// INTEGRAÇÃO FRONTEND
+document.getElementById("depositar").onclick = function () {
+    abrir("janelaDeposito");
+};
+document.getElementById("sacar").onclick = function () {
+    abrir("janelaSaque");
+};
+document.getElementById("transferir").onclick = function () {
+    abrir("janelaTransferencia");
+};
+document.getElementById("extrato").onclick = function () {
+    abrir("janelaExtrato");
+};
+function abrir(id) {
+    document.getElementById(id).style.display = "block";
+}
+// https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+function fechar(id) {
+    document.getElementById(id).style.display = "none";
+}
+function eventoDepositar() {
+    let nome = document.getElementById("depositoNome").value
+    let valor = Number(document.getElementById("depositoValor").value)
 
-matheus.depositar(30, bancoGenerico, bc);
-matheus.depositar(30000, bancoGenerico, bc);
-matheus.sacar(10, bancoGenerico, bc);
+    if (clientes[nome] == undefined) {
+        alert("Cliente não encontrado!")
+    } else {
+        clientes[nome].depositar(valor, bancoGenerico, bc)
+        alert("Depósito realizado com sucesso!")
+    }
+    fechar("janelaDeposito")
+}
+function eventoSacar() {
+    let nome = document.getElementById("saqueNome").value
+    let valor = Number(document.getElementById("saqueValor").value)
 
-joao.transferir(maria, 827, bancoGenerico, bc);
+    if (clientes[nome] == undefined) {
+        alert("Cliente não encontrado!")
+    } else {
+        let operacao = clientes[nome].sacar(valor, bancoGenerico, bc)
+        if (operacao) {
+            alert(`Saque no valor de ${valor} realizado com sucesso`)
+        } else {
+            alert("Saldo insuficiente para realizar o saque.")
+        }
+    }
+    //o alert de sucesso era mostrado antes da verificação do saldo
+    //mesmo que o saque nao fosse executado sempre aparecia pq n 
+    fechar("janelaSaque")
+}
+function eventoTransferencia() {
+    let remetente = document.getElementById("remetente").value
+    let destinatario = document.getElementById("destinatario").value
+    let valor = Number(document.getElementById("transfValor").value)
 
-console.log("\n--- Extratos ---");
-matheus.mostrarExtrato();
-maria.mostrarExtrato();
-joao.mostrarExtrato();
+    if (clientes[remetente] == undefined || clientes[destinatario] == undefined) {
+        alert("Remetente ou destinatário não encontrado, verifique novamente.")
+    } 
+    let operacao = clientes[remetente].transferir(clientes[destinatario], valor, bancoGenerico, bc)
+    if (operacao){
+        alert(`Transferência no valor de ${valor} realizado com sucesso`)
+    }else{
+        alert("Saldo insuficiente para realizar a transferência.")
+    }
+    
+    fechar("janelaTransferencia")
+}
+function eventoMostrarExtrato() {
+    let nome = document.getElementById("extratoNome").value
+    let area = document.getElementById("extratoArea")
 
-bc.mostrarMovimentacoesGrandes();
+    if (clientes[nome] == undefined) {
+        alert("Cliente não encontrado!")
+        return
+    }
+    area.innerHTML = ""
+    let extrato = clientes[nome].extrato;
+
+    if (extrato.length == 0) {
+        area.innerHTML = " - Sem movimentações.";
+    } else {
+        for (let i = 0; i < extrato.length; i++) {
+            let mov = extrato[i];
+            area.innerHTML += ` - ${mov.tipo} - R$ ${mov.valor} (Saldo atual: ${mov.saldoAtual})`;
+        }
+    }
+
+}

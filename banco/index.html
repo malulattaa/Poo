@@ -14,13 +14,13 @@
     </div>
     <div>
         <div class="acoes">
-            <div id="depositar" class="acao-btn">DEPOSITAR</div>
-            <div id="sacar" class="acao-btn">SACAR</div>
-            <div id="transferir"  class="acao-btn">TRANSFERIR</div>
-            <div id="extrato" class="acao-btn">EXTRATO</div>
+            <div id="depositar" class="acaoBotao"><b>DEPOSITAR</b></div>
+            <div id="sacar" class="acaoBotao"><b>SACAR</b></div>
+            <div id="transferir"  class="acaoBotao"><b>TRANSFERIR</b></div>
+            <div id="extrato" class="acaoBotao"><b>EXTRATO</b></div>
         </div>
     </div>
-    <div id="janelaDeposito">
+    <div id="janelaDeposito" class="janela">
         <h2>Depósito</h2>
         <input type="text" placeholder="Nome do Cliente" id="depositoNome">
         <input type="number" placeholder="Valor do depósito" id="depositoValor">
@@ -29,7 +29,7 @@
             <button onclick="fechar('janelaDeposito')">Fechar</button>
         </div>
     </div>
-    <div id="janelaSaque">
+    <div id="janelaSaque" class="janela">
         <h2>Saque</h2>
         <input type="text" placeholder="Nome do Cliente" id="saqueNome">
         <input type="number" placeholder="Valor do saque" id="saqueValor">
@@ -38,17 +38,17 @@
             <button onclick="fechar('janelaSaque')">Fechar</button>
         </div>
     </div>
-    <div id="janelaTransferencia">
+    <div id="janelaTransferencia" class="janela">
         <h2>Transferência</h2>
-        <input type="text" placeholder="Remetente (?)" id="remetente">
-        <input type="text" placeholder="Destinatário (?)" id="destinatario">
+        <input type="text" placeholder="Remetente" id="remetente">
+        <input type="text" placeholder="Destinatário" id="destinatario">
         <input type="number" placeholder="Valor da transferência" id="transfValor">
         <div class="janelaBotoes">
             <button onclick="eventoTransferencia()">Confirmar</button>
             <button onclick="fechar('janelaTransferencia')">Fechar</button>
         </div>
     </div>
-    <div id="janelaExtrato">
+    <div id="janelaExtrato" class="janela">
         <h2>Extrato</h2>
         <input type="text" placeholder="Nome do Cliente" id="extratoNome">
         <div class="janelaBotoes">
