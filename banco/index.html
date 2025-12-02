@@ -18,6 +18,7 @@
             <div id="sacar" class="acaoBotao"><b>SACAR</b></div>
             <div id="transferir"  class="acaoBotao"><b>TRANSFERIR</b></div>
             <div id="extrato" class="acaoBotao"><b>EXTRATO</b></div>
+            <div id="saldo" class="acaoBotao"><b>SALDO ATUAL</b></div>
         </div>
     </div>
     <div id="janelaDeposito" class="janela">
@@ -51,6 +52,15 @@
     <div id="janelaExtrato" class="janela">
         <h2>Extrato</h2>
         <input type="text" placeholder="Nome do Cliente" id="extratoNome">
+        <div class="janelaBotoes">
+            <button onclick="eventoMostrarExtrato()">Confirmar</button>
+            <button onclick="fechar('janelaExtrato')">Fechar</button>
+        </div>
+        <ul id="extratoArea"></ul>
+    </div>
+    <div id="janelaSaldo" class="janela">
+        <h2>Saldo</h2>
+        <input type="text" placeholder="Nome do Cliente" id="saldoNome">
         <div class="janelaBotoes">
             <button onclick="eventoMostrarExtrato()">Confirmar</button>
             <button onclick="fechar('janelaExtrato')">Fechar</button>

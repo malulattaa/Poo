@@ -116,6 +116,7 @@ class Conta {
         });
 
         banco.registroMovimentacao(this, valor, "Saque", bancoCentral);
+        return true;
     }
 
     transferir(destinatario, valor, banco, bancoCentral) {
@@ -126,7 +127,7 @@ class Conta {
         this.sacar(valor, banco, bancoCentral);
         destinatario.depositar(valor, banco, bancoCentral);
         }
-        
+        return true;
     }
 
     mostrarExtrato() {
@@ -215,6 +216,7 @@ function eventoTransferencia() {
 
     if (clientes[remetente] == undefined || clientes[destinatario] == undefined) {
         alert("Remetente ou destinatário não encontrado, verifique novamente.")
+        return
     } 
     let operacao = clientes[remetente].transferir(clientes[destinatario], valor, bancoGenerico, bc)
     if (operacao){
