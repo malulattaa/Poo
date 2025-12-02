@@ -5,7 +5,7 @@
 //clientes que fazem operações -> saque, transferencia entre clientes (pix) e deposito
 // exibir o extrato por cliente
 
-
+// AGÊNCIAS ASSOCIADAS A BANCO
 const agencia_banco = new Map([
     ['001-1', 'Banco do Brasil'],
     ['002-2', 'Caixa Econômico'],
@@ -14,10 +14,12 @@ const agencia_banco = new Map([
     ['005-5', 'Nubank']
 ])
 
+// CASO O NÚMERO DA AGÊNCIA NÃO CORRESPONDA A NENHUM BANCO
 function determinar_banco(num_agencia) {
     return agencia_banco.get(num_agencia) || 'Banco não cadastrado.'
 }
 
+// BANCO CENTRAL: notificado de movimentações acima de 1000 reais
 class bancoCentral {
     movimentacoesGrandes = []
 
@@ -27,7 +29,7 @@ class bancoCentral {
             valor: valor,
             tipo: tipo,
         })
-        console.log(`Banco Cnetral: operação de alto valor realizada.`)
+        console.log(`Banco Central: operação de alto valor realizada.`)
     }
     mostrarMovimentacoesGrandes() {
         console.log("----- Movimentações de alto valor -----")
@@ -36,6 +38,8 @@ class bancoCentral {
         }
     }
 }
+
+// BANCO: registra todas as movimentações e notifica o banco central quando elas forem maiores que 1000
 class banco {
     movimentacoes = []
     registroMovimentacao(conta, valor, tipo, bancoCentral) {
@@ -57,6 +61,7 @@ class banco {
     }
 }
 
+// PESSOA
 class pessoa {
     nome
     cpf
@@ -66,6 +71,7 @@ class pessoa {
     }
 }
 
+// CONTA: todas as operações que a pessoa pode realizar: depositar, sacar, transferir, ver extrato e ver o saldo
 class Conta {
     #saldo;
     extrato = [];
@@ -172,6 +178,9 @@ document.getElementById("transferir").onclick = function () {
 document.getElementById("extrato").onclick = function () {
     abrir("janelaExtrato");
 };
+document.getElementById("saldo").onclick = function () {
+    abrir("janelaSaldo");
+};
 function abrir(id) {
     document.getElementById(id).style.display = "block";
 }
@@ -246,5 +255,17 @@ function eventoMostrarExtrato() {
             area.innerHTML += ` - ${mov.tipo} - R$ ${mov.valor} (Saldo atual: ${mov.saldoAtual})`;
         }
     }
-
 }
+function eventoMostrarSaldo() {
+    let nome = document.getElementById("saldoNome").value;
+    let resultado = document.getElementById("saldoResultado");
+
+    if (clientes[nome] == undefined) {
+        alert("Cliente não encontrado!");
+        return;
+    }
+
+    resultado.innerText = `Saldo atual: R$ ${clientes[nome].saldo}`;
+}
+
+
