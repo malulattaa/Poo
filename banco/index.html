@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="cabecalho">
         <img id="logo" src="logo.png" alt="Logo do JS Bank">
         <h1>JS BANK</h1>
         <p class="slogan">DINHEIRO RÁPIDO, SEM ENROLAÇÃO</p>
     </div>
+
     <div>
         <div class="acoes">
             <div id="depositar" class="acaoBotao"><b>DEPOSITAR</b></div>
@@ -21,6 +23,7 @@
             <div id="saldo" class="acaoBotao"><b>SALDO ATUAL</b></div>
         </div>
     </div>
+
     <div id="janelaDeposito" class="janela">
         <h2>Depósito</h2>
         <input type="text" placeholder="Nome do Cliente" id="depositoNome">
@@ -30,6 +33,7 @@
             <button onclick="fechar('janelaDeposito')">Fechar</button>
         </div>
     </div>
+
     <div id="janelaSaque" class="janela">
         <h2>Saque</h2>
         <input type="text" placeholder="Nome do Cliente" id="saqueNome">
@@ -39,6 +43,7 @@
             <button onclick="fechar('janelaSaque')">Fechar</button>
         </div>
     </div>
+
     <div id="janelaTransferencia" class="janela">
         <h2>Transferência</h2>
         <input type="text" placeholder="Remetente" id="remetente">
@@ -49,6 +54,7 @@
             <button onclick="fechar('janelaTransferencia')">Fechar</button>
         </div>
     </div>
+
     <div id="janelaExtrato" class="janela">
         <h2>Extrato</h2>
         <input type="text" placeholder="Nome do Cliente" id="extratoNome">
@@ -58,6 +64,7 @@
         </div>
         <ul id="extratoArea"></ul>
     </div>
+
     <div id="janelaSaldo" class="janela">
         <h2>Saldo</h2>
         <input type="text" placeholder="Nome do Cliente" id="saldoNome">
@@ -68,7 +75,6 @@
         <ul id="saldoResultado"></ul>
     </div>
     
-
     <script src="funcionalidades.js"></script>
 </body>
 </html>

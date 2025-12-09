@@ -58,9 +58,12 @@ body{
     margin: 30px auto;
     border-radius: 10px;
     border: 1px solid #ccc;
+    
 }
 .janela h2 {
     margin-bottom: 10px;
+    justify-content: center;
+    display: flex;
 }
 
 .janela input {

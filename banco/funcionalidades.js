@@ -2,7 +2,7 @@
 // banco registra movimentações maiores que 1000
 // sistema de banco para controlar as transações
 // tem-se agência(s) - mais de uma - um banco tem varias agencias 
-//clientes que fazem operações -> saque, transferencia entre clientes (pix) e deposito
+// clientes que fazem operações -> saque, transferencia entre clientes (pix) e deposito
 // exibir o extrato por cliente
 
 // AGÊNCIAS ASSOCIADAS A BANCO
@@ -71,7 +71,7 @@ class pessoa {
     }
 }
 
-// CONTA: todas as operações que a pessoa pode realizar: depositar, sacar, transferir, ver extrato e ver o saldo
+// CONTA - todas as operações que a pessoa pode realizar: depositar, sacar, transferir, ver extrato e ver o saldo
 class Conta {
     #saldo;
     extrato = [];
